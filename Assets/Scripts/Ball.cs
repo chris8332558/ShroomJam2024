@@ -6,11 +6,12 @@ public class Ball : MonoBehaviour
 
     private void Start()
     {
-        mSpeed = GameManager.BallSpeed;
+        mSpeed = GameManager.Instance.ballSpeed;
     }
 
     private void Update()
     {
         transform.position += mSpeed * Time.deltaTime * Vector3.down;
+        mSpeed = GameManager.Instance.ballSpeed;
     }
 }

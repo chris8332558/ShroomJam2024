@@ -1,24 +1,49 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] TMP_Text scoreText;
+    [SerializeField] GameOverUI gameOverUI;
+    [SerializeField] Image alertLightFull;
+    [SerializeField] TMP_Text clockText;
+    [SerializeField] Image transitionInImg;
     private float score;
+
+    private void Start()
+    {
+        gameOverUI.transform.localScale = Vector3.zero;
+        transitionInImg.DOFade(0f, 0.5f).OnComplete(() =>
+        {
+            transitionInImg.gameObject.SetActive(false);
+        });
+    }
+
+    private void OnEnable()
+    {
+        EventManager.GameOver.AddListener(OnGameOver);
+    }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            AddScore(18);
-		}
+        clockText.text = GameManager.Instance.timer.ToString("00.00");
     }
 
     public void AddScore(float aScore)
     {
         score += aScore;
-        scoreText.text = score.ToString("00000000");
 	}
 
+    public void FillAlertLight(float amount)
+    {
+        alertLightFull.fillAmount = amount;
+	}
+
+    public void OnGameOver()
+    {
+        score *= (60f-GameManager.Instance.timer) * 0.125f;
+        gameOverUI.SetScore(score);
+        gameOverUI.gameObject.SetActive(true);
+	}
 }

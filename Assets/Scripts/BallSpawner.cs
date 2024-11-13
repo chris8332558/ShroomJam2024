@@ -7,8 +7,14 @@ public class BallSpawner : MonoBehaviour
     [SerializeField] float spawnCD;
     [SerializeField] float spawnCDTimer;
 
+    private void OnEnable()
+    {
+        EventManager.GameOver.AddListener(OnGameOver);
+    }
+
     private void Update()
     {
+        spawnCD = GameManager.Instance.ballSpawnCD;
         spawnCDTimer += Time.deltaTime;
         if (spawnCDTimer > spawnCD)
         {
@@ -34,5 +40,10 @@ public class BallSpawner : MonoBehaviour
     {
         int idx = Random.Range(0, ballPrefabs.Length);
         return ballPrefabs[idx];
+	}
+
+    private void OnGameOver()
+    {
+        gameObject.SetActive(false);
 	}
 }
