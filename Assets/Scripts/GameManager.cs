@@ -15,6 +15,18 @@ public class GameManager : MonoBehaviour
     public Switch switch1;
     public Switch switch2;
     public Switch switch3;
+    public Switch switch4;
+    public Transform cable1;
+    public Transform cable2;
+    public Transform cable3;
+    public Transform cable4;
+    public Transform spawnPoint1;
+    public Transform spawnPoint2;
+    public Transform spawnPoint3;
+    public Transform spawnPoint4;
+
+
+    public Button numCableBtn;
     public TMP_Text startHintText;
     public Image startHintImg;
 
@@ -33,6 +45,8 @@ public class GameManager : MonoBehaviour
     private bool speedUp3;
     private bool speedUp4;
     private bool speedUp5;
+
+    public int numCable = 3;
 
     private void Awake()
     {
@@ -61,7 +75,8 @@ public class GameManager : MonoBehaviour
         {
             startHintImg.DOFade(1f, 0.8f);
         }).SetLoops(-1, LoopType.Yoyo);
-        
+
+        ChangeToThreeCableSet();
         ballSpeed = 0;
         ballSpawnCD = Mathf.Infinity;
     }
@@ -105,6 +120,7 @@ public class GameManager : MonoBehaviour
     {
         ballSpeed = ballSpeeds[idx];
         ballSpawnCD = ballSpawnCDs[idx];
+        if (numCable == 4) ballSpawnCD *= 0.9f;
         electronPoint = electronPoints[idx];
     }
 
@@ -112,16 +128,19 @@ public class GameManager : MonoBehaviour
     {
         if (!isGameStart)
         {
-            if (switch1.isTurnedOn && switch2.isTurnedOn && switch3.isTurnedOn)
+            if ((numCable == 3 && switch1.isTurnedOn && switch2.isTurnedOn && switch3.isTurnedOn) ||
+                (numCable == 4 && switch1.isTurnedOn && switch2.isTurnedOn && switch3.isTurnedOn && switch4.isTurnedOn))
             {
                 DOTween.Clear();
                 SpeedUp(0);
                 isGameStart = true;
                 startHintText.gameObject.SetActive(false);
                 startHintImg.gameObject.SetActive(false);
-			}
+                numCableBtn.gameObject.SetActive(false);
+            }
         }
     }
+
 
     public void StopGame()
     {
@@ -129,4 +148,59 @@ public class GameManager : MonoBehaviour
         isGameOver = true;
         MusicSource.Instance.StopMusic();
 	}
+
+    public void SwitchCableSet()
+    {
+        SFXSource.Instance.PlaySwitchOn();
+        if (numCable == 3)
+        {
+            ChangeToFourCableSet();
+		}
+        else if (numCable == 4)
+        {
+            ChangeToThreeCableSet();
+		}
+	}
+
+    private void ChangeToThreeCableSet()
+    {
+        cable1.transform.DOLocalMoveX(-3, 0.01f);
+        cable2.transform.DOLocalMoveX(0, 0.01f);
+        cable3.transform.DOLocalMoveX(3, 0.01f);
+        switch1.transform.DOLocalMoveX(-2.32f, 0.01f);
+        switch2.transform.DOLocalMoveX(0.682f, 0.01f);
+        switch3.transform.DOLocalMoveX(3.68f, 0.01f);
+        spawnPoint1.transform.DOLocalMoveX(-3, 0.01f);
+        spawnPoint2.transform.DOLocalMoveX(0, 0.01f);
+        spawnPoint3.transform.DOLocalMoveX(3, 0.01f);
+        switch4.gameObject.SetActive(false);
+        cable4.gameObject.SetActive(false);
+        spawnPoint4.gameObject.SetActive(false);
+
+        switch1.switchKey = KeyCode.J;
+        switch2.switchKey = KeyCode.K;
+        switch3.switchKey = KeyCode.L;
+        numCable = 3;
+    }
+
+    private void ChangeToFourCableSet()
+    { 
+        cable1.transform.DOLocalMoveX(-4, 0.01f);
+        cable2.transform.DOLocalMoveX(-1.5f, 0.01f);
+        cable3.transform.DOLocalMoveX(0.5f, 0.01f);
+        switch1.transform.DOLocalMoveX(-3.32f, 0.01f);
+        switch2.transform.DOLocalMoveX(-0.82f, 0.01f);
+        switch3.transform.DOLocalMoveX(1.18f, 0.01f);
+        spawnPoint1.transform.DOLocalMoveX(-4f, 0.01f);
+        spawnPoint2.transform.DOLocalMoveX(-1.5f, 0.01f);
+        spawnPoint3.transform.DOLocalMoveX(0.5f, 0.01f);
+        switch4.gameObject.SetActive(true);
+        cable4.gameObject.SetActive(true);
+        spawnPoint4.gameObject.SetActive(true);
+
+        switch1.switchKey = KeyCode.D;
+        switch2.switchKey = KeyCode.F;
+        switch3.switchKey = KeyCode.J;
+        numCable = 4;
+    }
 }

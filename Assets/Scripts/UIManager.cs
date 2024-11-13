@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image alertLightFull;
     [SerializeField] TMP_Text clockText;
     [SerializeField] Image transitionInImg;
+    [SerializeField] TMP_Text numCableBtnText;
     private float score;
 
     private void Start()
@@ -38,6 +39,19 @@ public class UIManager : MonoBehaviour
     public void FillAlertLight(float amount)
     {
         alertLightFull.fillAmount = amount;
+	}
+
+    public void SwitchCableSet()
+    {
+        GameManager.Instance.SwitchCableSet();
+        if (GameManager.Instance.numCable == 3)
+        {
+            numCableBtnText.text = "3 Cables";
+		}
+        else
+        { 
+            numCableBtnText.text = "4 Cables";
+		}
 	}
 
     public void OnGameOver()

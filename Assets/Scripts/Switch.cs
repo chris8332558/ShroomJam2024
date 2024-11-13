@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
 public class Switch : MonoBehaviour
 {
-    [SerializeField] KeyCode switchOneKey;
+    public KeyCode switchKey;
     [SerializeField] private Sprite switchOnSprite;
     [SerializeField] private Sprite switchOffSprite;
     [SerializeField] private SpriteRenderer blockSprite;
@@ -27,7 +27,7 @@ public class Switch : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(switchOneKey))
+        if (Input.GetKeyDown(switchKey))
         {
             mCollider.enabled = !mCollider.enabled;   
             if (mCollider.enabled)

@@ -26,8 +26,10 @@ public class Machine : MonoBehaviour
 		}
         if (collision.CompareTag("Electron"))
         { 
-            Debug.Log("Electron!");   
-            uiManager.AddScore(GameManager.Instance.electronPoint);
+            Debug.Log("Electron!");
+            float scoreToAdd = GameManager.Instance.electronPoint;
+            if (GameManager.Instance.numCable == 4) scoreToAdd *= 1.35f;
+            uiManager.AddScore(scoreToAdd);
             SFXSource.Instance.PlayScoreClip();
 		}
         Destroy(collision.gameObject);
